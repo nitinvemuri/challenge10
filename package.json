@@ -1,0 +1,28 @@
+{
+  "name": "package.json",
+  "version": "1.0.0",
+  "description": "Team profile gen",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "inquirer": "^8.1.0"
+  },
+  "devDependencies": {
+    "jest": "^27.0.1"
+  },
+  "scripts": {
+    "test": "Jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nitinvemuri/challenge10.git"
+  },
+  "author": "Nitin Vemuri",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nitinvemuri/challenge10/issues"
+  },
+  "homepage": "https://github.com/nitinvemuri/challenge10#readme"
+}
