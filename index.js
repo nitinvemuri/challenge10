@@ -5,11 +5,14 @@ const Engineer = require('./lib/Engineer');
 const inquirer = require('inquirer');
 const fs = require('fs');
 const http = require('http');
-const {  } = require('./gensite');
+const { generateSite  } = require('./gensite');
 const { prompt } = require('inquirer');
 const generateHTML = ('./dist/index.html')
 const pagetemplae = require('./src/pagetemplae');
 const { validate } = require('@babel/types');
+const { choices } = require('yargs');
+const { of } = require('rxjs');
+const { kill } = require('process');
 
 
 
@@ -21,6 +24,15 @@ const teamMembers = [];
 
 function addTeamMembers() {
     inquirer.prompt([
+    {
+        type: 'list',
+        name: 'ok',
+        message: 'Do you have a manager?',
+        choices: [
+            'yes',
+            'no'
+        ]
+    },
     {
         type: 'input',
         name: 'managerName',
@@ -139,10 +151,33 @@ function internPrompt () {
                     return internPrompt();
                 }
             }
+        },
+        {
+            type : 'input',
+            name: 'id',
+            message: 'What is Intern ID?'
+        },
+        {
+            type: 'input',
+            name: 'internEmail',
+            message: 'What is Intern Email',
+        },
+        {
+            type: 'input',
+            name: 'school',
+            message: 'What is Intern School/College/University',
+            validate: inputSchool => {
+                if (inputSchool) {
+                    return true
+                } else {
+                    return false
+                }
+            }
         }
-    ]).then(teamMember => {
-        const intern = new Intern(teamMember.name)
+    ]).then(internMember => {
+        const intern = new Intern(internMember.name, internMember.id, internMember.email, internMember.school)
         teamMembers.push(intern)
+        console.log('Added Intern')
         confirmOtherTeam();
     })
 }
@@ -151,11 +186,34 @@ function engineerPrompt () {
         {
             type: 'input',
             name: 'name',
-            message: 'engineerName',
-        }
-    ]).then(teamMember => {
-        const engineer = new Engineer (teamMember.name)
+            message: 'What is Engineer Name',
+            validate: inputName => {
+                if(inputName) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'engineerId',
+            message: 'What is Engineer Id?'
+        },
+        {
+            type: 'input',
+            name: 'email',
+            message: 'What is Engineer Email?'
+        },
+        {
+            type: 'input',
+            name: 'github',
+            message: 'What is Engineer Github',
+        },
+    ]).then(engineerMember => {
+        const engineer = new Engineer (engineerMember.name, engineerMember.engineerId, engineerMember.email, engineerMember.github,)
         teamMembers.push(engineer);
+        console.log('Added Engineer')
         confirmOtherTeam();
     })
 }
@@ -179,23 +237,6 @@ function nonePrompt () {
 
     }) 
 }
-
-
-
-
-
-
-
-function callBack(err) {
-    if (err) throw err;
-    console.log('ggg')
-}
-
-function createTeam() {
-    const context = pagetemplae(teamMembers);
-    fs.writeFileSync(generateHTML, context);
-    fs.copyfile('./dist/style.css', callBack)
-};
 
 }
 
