@@ -1,12 +1,12 @@
 # challenge10
 
-User Story</br>
+# User Story
 AS A manager
 I WANT to generate a webpage that displays my team's basic info
 SO THAT I have quick access to their emails and GitHub profiles
 
 
-Acceptance Criteria</br>
+# Acceptance Criteria
 GIVEN a command-line application that accepts user input
 WHEN I am prompted for my team members and their information
 THEN an HTML file is generated that displays a nicely formatted team roster based on user input
@@ -52,15 +52,15 @@ THEN I exit the application, and the HTML is generated
 </br>
 </br>
 
-Grading Requirements
+# Grading Requirements
 This Challenge is graded based on the following criteria:
 
-Deliverables: 15%
+# Deliverables: 15%
 A sample HTML file generated using the application must be submitted.
 
 Your GitHub repository containing your application code.
 
-Walkthrough Video: 32%
+# Walkthrough Video: 32%
 A walkthrough video that demonstrates the functionality of the Team Profile Generator and passing tests must be submitted, and a link to the video should be included in your README file.
 
 The walkthrough video must show all four tests passing from the command line.
@@ -86,7 +86,7 @@ The application must have these classes: Employee, Manager, Engineer, and Intern
 
 - Application includes all four classes. 
 
-Repository Quality: 13%
+# Repository Quality: 13%
 Repository has a unique name.
 
 Repository follows best practices for file structure and naming conventions.
