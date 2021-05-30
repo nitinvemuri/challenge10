@@ -5,19 +5,10 @@ const Engineer = require('./lib/Engineer');
 const inquirer = require('inquirer');
 const fs = require('fs');
 const http = require('http');
-const { generateSite  } = require('./gensite');
-const { prompt } = require('inquirer');
+
+
 const generateHTML = ('./dist/index.html')
 const pagetemplae = require('./src/pagetemplae');
-const { validate } = require('@babel/types');
-const { choices } = require('yargs');
-const { of } = require('rxjs');
-const { kill } = require('process');
-
-
-
-
-
 
 const teamMembers = [];
 
@@ -26,68 +17,93 @@ function addTeamMembers() {
     inquirer.prompt([
     {
         type: 'list',
-        name: 'ok',
-        message: 'Do you have a manager?',
+        name: 'choices',
+        message: 'What type of Employee',
         choices: [
-            'yes',
-            'no'
+            'Manager',
+            'Engineer',
+            'Intern',
+            'None',
         ]
     },
-    {
-        type: 'input',
-        name: 'managerName',
-        message: 'What is Managers name',
-        validate: inputName => {
-            if (inputName) {
-                return true
-            } else {
-                console.log("Input a name");
-                return false;
-            }
-        }
-    },
-    {
-        type: 'input',
-        name: 'managerEmail',
-        message: 'What is Manager Email?',
-        validate: inputEmail => {
-            if (inputEmail) {
-                return true 
-            } else {
-                console.log('Input an Email')
-                return false;
-            }
-        }
-    },
-    {
-        type: 'input',
-        name: 'managerId',
-        message: 'Manager ID?',
-        validate: inputID => {
 
-            if (inputID) {
-                return true
-
-            } else {
-                console.log('input an id')
-                return false;
-            }
-        }
-    },
-    {
-        type:'input',
-        name: 'officeNumbers',
-        message: 'What is managers office numbers?',
-    },
-
-
-    
-]).then(theManager => {
-    const manager = new Manager(theManager.managerName, theManager.managerId, theManager.managerEmail, theManager.officeNumbers)
-    teamMembers.push(manager)
-    console.log('workignigign')
-    otherTeam();
+]).then(teamChoice => {
+    const pick = teamChoice.choices;
+    if (pick === 'Manager') {
+        managerPrompt();
+    } else if (pick === 'Engineer') {
+        engineerPrompt();
+    } else if (pick === 'Intern') {
+        internPrompt();
+    } else if (pick === 'None') {
+        nonePrompt();
+    }
 })
+
+function managerPrompt() {
+    inquirer.prompt ([
+        {
+            type: 'input',
+            name: 'managerName',
+            message: 'What is Managers name',
+            validate: inputName => {
+                if (inputName) {
+                    return true
+                } else {
+                    console.log("Input a name");
+                    return false;
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'managerEmail',
+            message: 'What is Manager Email?',
+            validate: inputEmail => {
+                if (inputEmail) {
+                    return true 
+                } else {
+                    console.log('Input an Email')
+                    return false;
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'managerId',
+            message: 'Manager ID?',
+            validate: inputID => {
+        
+                if (inputID) {
+                    return true
+        
+                } else {
+                    console.log('input an id')
+                    return false;
+                }
+            }
+        },
+        {
+            type:'input',
+            name: 'numbers',
+            message: 'What is managers office numbers?',
+            validate: inputNumbers => {
+                if(inputNumbers) {
+                    return true;
+                } else {
+                    console.log('input office Numbers?')
+                    return false;
+                }
+            }
+        },
+    
+    ]).then(theManager => {
+        const manager = new Manager(theManager.managerName, theManager.managerId, theManager.managerEmail, theManager.numbers)
+        teamMembers.push(manager)
+        console.log('Added Manager')
+        confirmOtherTeam();
+    })
+}
 
 function otherTeam() {
     inquirer.prompt ([
@@ -96,6 +112,7 @@ function otherTeam() {
             name: 'employee',
             message: 'what other employee do you have?',
             choices: [
+                'Manager',
                 'Engineer',
                 'Intern',
                 'None',
@@ -110,6 +127,9 @@ function otherTeam() {
             internPrompt();
         } else if (pick === "None") {
             nonePrompt();
+        } else if (pick === 'Manager') {
+            managerPrompt();
+
         }
 
     })
@@ -159,8 +179,8 @@ function internPrompt () {
         },
         {
             type: 'input',
-            name: 'internEmail',
-            message: 'What is Intern Email',
+            name: 'email',
+            message: 'What is Intern Email?',
         },
         {
             type: 'input',
@@ -197,7 +217,7 @@ function engineerPrompt () {
         },
         {
             type: 'input',
-            name: 'engineerId',
+            name: 'id',
             message: 'What is Engineer Id?'
         },
         {
@@ -211,7 +231,7 @@ function engineerPrompt () {
             message: 'What is Engineer Github',
         },
     ]).then(engineerMember => {
-        const engineer = new Engineer (engineerMember.name, engineerMember.engineerId, engineerMember.email, engineerMember.github,)
+        const engineer = new Engineer (engineerMember.name, engineerMember.id, engineerMember.email, engineerMember.github,)
         teamMembers.push(engineer);
         console.log('Added Engineer')
         confirmOtherTeam();
@@ -235,8 +255,26 @@ function nonePrompt () {
             return addTeamMembers();
         }
 
+
     }) 
+};
+
+
+
+function createTeam() {
+    const generatePage = pagetemplae(teamMembers);
+    fs.writeFileSync(generateHTML, generatePage,);
+    errorOrSucc();
 }
+
+function errorOrSucc() {
+    if (err => {
+        throw err
+    })
+    console.log('Successfully Written')
+};
+
+
 
 }
 
@@ -244,4 +282,5 @@ function nonePrompt () {
 addTeamMembers();
 
 module.exports = teamMembers;
-  
+
+
